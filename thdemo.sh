@@ -46,6 +46,7 @@ export WINEARCH='win32'
 TH_NAMES='th06 "東方紅魔郷　～ the Embodiment of Scarlet Devil."
 	th07 "東方妖々夢　～ Perfect Cherry Blossom."
 	th08 "東方永夜抄　～ Imperishable Night."
+	th09 "東方花映塚　～ Phantasmagoria of Flower View."
 	th10 "東方風神録　～ Mountain of Faith."'
 
 while true; do
