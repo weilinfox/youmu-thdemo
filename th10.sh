@@ -47,14 +47,14 @@ function th10_setup {
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH10_LINKS})
 		[ "$link" = "" ] && break
 
-		curl ${link} --output ${TH10_DIR}/${TH10_FILE}
+		curl -L ${link} --output ${TH10_DIR}/${TH10_FILE}
 	done
 
 	while [ "$(md5sum "${TH10_DIR}/${TH10_CUSTOM_FILE}" | cut -d' ' -f1)" != "${TH10_CUSTOM_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH10_CUSTOM_LINKS})
 		[ "$link" = "" ] && break
 
-		curl ${link} --output ${TH10_DIR}/${TH10_CUSTOM_FILE}
+		curl -L ${link} --output ${TH10_DIR}/${TH10_CUSTOM_FILE}
 	done
 
 	OLD_LANG=${LANG}
