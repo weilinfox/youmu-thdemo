@@ -6,7 +6,7 @@
 SCRIPT_DIR=$(cd $(dirname "$0"); pwd)
 APP_NAME="th-demo"
 
-export WORK_DIR="${HOME}/.local/share/${APP_NAME}"
+export WORK_DIR="${HOME}/.${APP_NAME}"
 
 if ! zenity --version >/dev/null; then
 	echo It needs zenity to show dialog.
