@@ -64,15 +64,14 @@ function th10_setup {
 
 	if [ -e ${TH10_FILE} ] && [ -e ${TH10_CUSTOM_FILE} ]; then
 		eval ${LZH_DEC} ${TH10_CUSTOM_FILE}
-		rm ${TH10_CUSTOM_FILE}
-
-		mv custom.exe "${TH10_INST}/"
-
+		
 		LANG='ja_JP.UTF-8'
 
 		wine ${TH10_FILE}
 
 		if [ -d "${TH10_INST}" ]; then
+			mv custom.exe "${TH10_INST}/"
+			rm ${TH10_CUSTOM_FILE}
 			rm ${TH10_FILE}
 			for f in "custom.exe" "th10tr.dat" "th10tr.exe" "thbgm_tr.dat" "マニュアル"; do
 				ln -s "${TH10_INST}/${f}" "${TH10_DIR}/${f}"
