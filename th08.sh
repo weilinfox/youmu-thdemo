@@ -13,7 +13,7 @@ TH08_UPDATE_MD5='1e21a0489ccdc102e48bcdd91d060f64'
 
 [ -d ${TH08_DIR} ] || mkdir ${TH08_DIR}
 
-function th08_check {
+th08_check() {
 	if [ -e "${TH08_DIR}/th08tr.exe" ]; then
 		echo 1
 	else
@@ -21,13 +21,13 @@ function th08_check {
 	fi
 }
 
-function th08_run {
+th08_run() {
 	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd "${TH08_DIR}"
 
-	if [ "$(ps -A | grep timidity)" == '' ] ; then
+	if [ "$(ps -A | grep timidity)" = '' ] ; then
 		timidity -iA &
 		midi="1"
 	fi
@@ -36,7 +36,7 @@ function th08_run {
 
 	wine th08tr.exe
 
-	if [ "${midi}" == "1" ]; then
+	if [ "${midi}" = "1" ]; then
 		killall timidity
 	fi
 
@@ -44,7 +44,7 @@ function th08_run {
 	cd ${OLD_PWD}
 }
 
-function th08_setup {
+th08_setup() {
 	while [ "$(eval md5sum "${TH08_DIR}/${TH08_FILE}" | cut -d' ' -f1)" != "${TH08_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH08_LINKS})
 		[ "$link" = "" ] && break

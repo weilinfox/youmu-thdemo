@@ -10,7 +10,7 @@ TH07_MD5='05360e859c1a3ca173b9d57d96a45b9b'
 
 [ -d ${TH07_DIR} ] || mkdir ${TH07_DIR}
 
-function th07_check {
+th07_check() {
 	if [ -e "${TH07_DIR}/th07.exe" ]; then
 		echo 1
 	else
@@ -18,13 +18,13 @@ function th07_check {
 	fi
 }
 
-function th07_run {
+th07_run() {
 	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd "${TH07_DIR}"
 
-	if [ "$(ps -A | grep timidity)" == '' ] ; then
+	if [ "$(ps -A | grep timidity)" = '' ] ; then
 		timidity -iA &
 		midi="1"
 	fi
@@ -33,7 +33,7 @@ function th07_run {
 
 	wine th07.exe
 
-	if [ "${midi}" == "1" ]; then
+	if [ "${midi}" = "1" ]; then
 		killall timidity
 	fi
 
@@ -41,7 +41,7 @@ function th07_run {
 	cd ${OLD_PWD}
 }
 
-function th07_setup {
+th07_setup() {
 	while [ "$(eval md5sum "${TH07_DIR}/${TH07_FILE}" | cut -d' ' -f1)" != "${TH07_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH07_LINKS})
 		[ "$link" = "" ] && break

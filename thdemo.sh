@@ -42,7 +42,7 @@ if ! convmv --list >/dev/null; then
 fi
 
 if ! timidity >/dev/null; then
-	zenity --warning --title "No timidity" --text "妖々夢 紅魔郷 体验版需要 timidity 播放背景音乐"
+	zenity --warning --title "No timidity" --text "紅魔郷 妖々夢 永夜抄 花映塚 体验版需要 timidity 播放背景音乐"
 fi
 
 

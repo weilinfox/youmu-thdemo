@@ -15,7 +15,7 @@ TH11_UPDATE_MD5='9548b3af586cf1030229cc38e5db24c3'
 
 [ -d ${TH11_DIR} ] || mkdir ${TH11_DIR}
 
-function th11_check {
+th11_check() {
 	if [ -e "${TH11_DIR}/th11.exe" ]; then
 		echo 1
 	else
@@ -23,7 +23,7 @@ function th11_check {
 	fi
 }
 
-function th11_run {
+th11_run() {
 	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
@@ -38,7 +38,7 @@ function th11_run {
 	cd ${OLD_PWD}
 }
 
-function th11_setup {
+th11_setup() {
 	while [ "$(eval md5sum "${TH11_DIR}/${TH11_FILE}" | cut -d' ' -f1)" != "${TH11_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH11_LINKS})
 		[ "$link" = "" ] && break

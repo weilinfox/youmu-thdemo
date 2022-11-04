@@ -10,7 +10,7 @@ TH06_MD5='7ea4be414a7f256429a2c5e4666c9881'
 
 [ -d ${TH06_DIR} ] || mkdir ${TH06_DIR}
 
-function th06_check {
+th06_check() {
 	if [ -e "${TH06_DIR}/東方紅魔郷.exe" ]; then
 		echo 1
 	else
@@ -18,12 +18,12 @@ function th06_check {
 	fi
 }
 
-function th06_run {
+th06_run() {
 	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd "${TH06_DIR}"
-	if [ "$(ps -A | grep timidity)" == '' ] ; then
+	if [ "$(ps -A | grep timidity)" = '' ] ; then
 		timidity -iA &
 		midi="1"
 	fi
@@ -32,7 +32,7 @@ function th06_run {
 
 	wine 東方紅魔郷.exe
 
-	if [ "${midi}" == "1" ]; then
+	if [ "${midi}" = "1" ]; then
 		killall timidity
 	fi
 
@@ -40,7 +40,7 @@ function th06_run {
 	cd ${OLD_PWD}
 }
 
-function th06_setup {
+th06_setup() {
 	while [ "$(eval md5sum "${TH06_DIR}/${TH06_FILE}" | cut -d' ' -f1)" != "${TH06_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH06_LINKS})
 		[ "$link" = "" ] && break

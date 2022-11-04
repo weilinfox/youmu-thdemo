@@ -12,7 +12,7 @@ TH15_MD5='83dccc60c17d2b9fc25ccb713ee06078'
 [ -d ${TH15_DIR} ] || mkdir ${TH15_DIR}
 [ -d ${TH15_DATA} ] || mkdir ${TH15_DATA}
 
-function th15_check {
+th15_check() {
 	if [ -e "${TH15_DIR}/th15.exe" ]; then
 		echo 1
 	else
@@ -20,7 +20,7 @@ function th15_check {
 	fi
 }
 
-function th15_run {
+th15_run() {
 	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
@@ -35,7 +35,7 @@ function th15_run {
 	cd ${OLD_PWD}
 }
 
-function th15_setup {
+th15_setup() {
 	while [ "$(eval md5sum "${TH15_DIR}/${TH15_FILE}" | cut -d' ' -f1)" != "${TH15_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH15_LINKS})
 		[ "$link" = "" ] && break

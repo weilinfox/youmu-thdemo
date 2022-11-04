@@ -13,7 +13,7 @@ TH13_MD5='5336b10545fd0b6cb0eb38c97199e9bc'
 [ -d ${TH13_DIR} ] || mkdir ${TH13_DIR}
 [ -d ${TH13_DATA} ] || mkdir ${TH13_DATA}
 
-function th13_check {
+th13_check() {
 	if [ -e "${TH13_DIR}/th13.exe" ]; then
 		echo 1
 	else
@@ -21,7 +21,7 @@ function th13_check {
 	fi
 }
 
-function th13_run {
+th13_run() {
 	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
@@ -36,7 +36,7 @@ function th13_run {
 	cd ${OLD_PWD}
 }
 
-function th13_setup {
+th13_setup() {
 	while [ "$(eval md5sum "${TH13_DIR}/${TH13_FILE}" | cut -d' ' -f1)" != "${TH13_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH13_LINKS})
 		[ "$link" = "" ] && break

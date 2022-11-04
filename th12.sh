@@ -10,7 +10,7 @@ TH12_MD5='61a77c94c2ef64d7afda477dda0594eb'
 
 [ -d ${TH12_DIR} ] || mkdir ${TH12_DIR}
 
-function th12_check {
+th12_check() {
 	if [ -e "${TH12_DIR}/th12.exe" ]; then
 		echo 1
 	else
@@ -18,7 +18,7 @@ function th12_check {
 	fi
 }
 
-function th12_run {
+th12_run() {
 	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
@@ -33,7 +33,7 @@ function th12_run {
 	cd ${OLD_PWD}
 }
 
-function th12_setup {
+th12_setup() {
 	while [ "$(eval md5sum "${TH12_DIR}/${TH12_FILE}" | cut -d' ' -f1)" != "${TH12_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH12_LINKS})
 		[ "$link" = "" ] && break

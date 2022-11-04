@@ -17,7 +17,7 @@ TH10_CUSTOM_MD5='ff0501145d6dc00e61fd8bd153e3bc5a'
 
 [ -d ${TH10_DIR} ] || mkdir ${TH10_DIR}
 
-function th10_check {
+th10_check() {
 	if [ -e "${TH10_DIR}/th10.exe" ] || [ -e "${TH10_DIR}/th10tr.exe" ]; then
 		echo 1
 	else
@@ -25,7 +25,7 @@ function th10_check {
 	fi
 }
 
-function th10_run {
+th10_run() {
 	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
@@ -42,7 +42,7 @@ function th10_run {
 	cd ${OLD_PWD}
 }
 
-function th10_setup {
+th10_setup() {
 	while [ "$(eval md5sum "${TH10_DIR}/${TH10_FILE}" | cut -d' ' -f1)" != "${TH10_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH10_LINKS})
 		[ "$link" = "" ] && break
