@@ -19,7 +19,6 @@ th06_check() {
 }
 
 th06_run() {
-	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd "${TH06_DIR}"
@@ -28,15 +27,12 @@ th06_run() {
 		midi="1"
 	fi
 
-	LANG="ja_JP.UTF-8"
-
-	wine 東方紅魔郷.exe
+	LC_ALL="${TMP_LOCALE}" wine 東方紅魔郷.exe
 
 	if [ "${midi}" = "1" ]; then
 		killall timidity
 	fi
 
-	LANG=${OLD_LANG}
 	cd ${OLD_PWD}
 }
 
@@ -61,9 +57,11 @@ th06_setup() {
 		ln -s "${TH06_INST}/東方紅魔郷.exe" "${TH06_DIR}/"
 		for i in CM IN MD ST TL; do
 			ln -s "${TH06_INST}/紅魔郷$i.DAT" "${TH06_DIR}/"
+			ln -s "${TH06_INST}/紅魔郷$i.DAT" "${TH06_DIR}/峠杺嫿$i.DAT"
 		done
 
 		echo AAABAAAA////////////////AAACAQAAAgMAAgEBAQBYAlgCAAAAAAAAAAAAAAAAAAAAAAEAAAA= | base64 -d > 東方紅魔郷.cfg
+		cp 東方紅魔郷.cfg 搶曽峠杺嫿.cfg
 	fi
 
 	cd ${OLD_PWD}

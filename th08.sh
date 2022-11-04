@@ -22,7 +22,6 @@ th08_check() {
 }
 
 th08_run() {
-	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd "${TH08_DIR}"
@@ -32,15 +31,12 @@ th08_run() {
 		midi="1"
 	fi
 
-	LANG="ja_JP.UTF-8"
-
-	wine th08tr.exe
+	LC_ALL="${TMP_LOCALE}" wine th08tr.exe
 
 	if [ "${midi}" = "1" ]; then
 		killall timidity
 	fi
 
-	LANG=${OLD_LANG}
 	cd ${OLD_PWD}
 }
 
@@ -71,7 +67,7 @@ th08_setup() {
 		mv eiya_update003a.EXE "${TH08_INST}/"
 
 		cd ${TH08_INST}
-		LANG="ja_JP.UTF-8" wine eiya_update003a.EXE
+		LC_ALL="${TMP_LOCALE}" wine eiya_update003a.EXE
 
 		for f in "custom.exe" "replayview.exe" "th08tr.exe" "th08tr.dat" "マニュアル"; do
 			ln -s "${TH08_INST}/${f}" "${TH08_DIR}/${f}"

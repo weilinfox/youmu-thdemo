@@ -2,6 +2,7 @@
 
 TH10_DIR="${WORK_DIR}/th10"
 TH10_INST="${WINEPREFIX}/drive_c/Program Files/上海アリス幻樂団/東方風神録体験版"
+TH10_INST_BAK="${WINEPREFIX}/drive_c/Program Files/忋奀傾儕僗尪炠抍/搶曽晽恄榐懱尡斉"
 
 TH10_FILE='th10tr002a_setup.exe'
 TH10_CUSTOM_FILE='thcustom_002a.lzh'
@@ -26,19 +27,16 @@ th10_check() {
 }
 
 th10_run() {
-	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd "${TH10_DIR}"
-	LANG="ja_JP.UTF-8"
 
 	if [ -e "th10.exe" ]; then
-		wine th10.exe
+		LC_ALL="${TMP_LOCALE}" wine th10.exe
 	else
-		wine th10tr.exe
+		LC_ALL="${TMP_LOCALE}" wine th10tr.exe
 	fi
 
-	LANG=${OLD_LANG}
 	cd ${OLD_PWD}
 }
 
@@ -57,7 +55,6 @@ th10_setup() {
 		curl -L ${link} --output ${TH10_DIR}/${TH10_CUSTOM_FILE}
 	done
 
-	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd ${TH10_DIR}
@@ -65,24 +62,24 @@ th10_setup() {
 	if [ -e ${TH10_FILE} ] && [ -e ${TH10_CUSTOM_FILE} ]; then
 		eval ${LZH_DEC} ${TH10_CUSTOM_FILE}
 		
-		LANG='ja_JP.UTF-8'
+		LC_ALL="${TMP_LOCALE}" wine ${TH10_FILE}
 
-		wine ${TH10_FILE}
-
+		[ -d "${TH10_INST_BAK}" ] && [ ! -d "${TH10_INST}" ] && TH10_INST=${TH10_INST_BAK}
 		if [ -d "${TH10_INST}" ]; then
 			mv custom.exe "${TH10_INST}/"
 			rm ${TH10_CUSTOM_FILE}
 			rm ${TH10_FILE}
-			for f in "custom.exe" "th10tr.dat" "th10tr.exe" "thbgm_tr.dat" "マニュアル"; do
+			for f in "custom.exe" "th10tr.dat" "th10tr.exe" "thbgm_tr.dat"; do
 				ln -s "${TH10_INST}/${f}" "${TH10_DIR}/${f}"
 			done
+			[ -d "${TH10_INST}/儅僯儏傾儖" ] && ln -s "${TH10_INST}/儅僯儏傾儖" "${TH10_DIR}/マニュアル"
+			[ -d "${TH10_INST}/マニュアル" ] && ln -s "${TH10_INST}/マニュアル" "${TH10_DIR}/マニュアル"
 
 			zenity --info --title "Success" --text "東方風神録 安装完成了捏"
 		fi
 	fi
 
 	cd ${OLD_PWD}
-	LANG=${OLD_LANG}
 }
 
 [ "$(th10_check)" = "0" ] && th10_setup

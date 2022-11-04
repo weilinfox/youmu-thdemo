@@ -2,6 +2,7 @@
 
 TH11_DIR="${WORK_DIR}/th11"
 TH11_INST="${WINEPREFIX}/drive_c/Program Files/上海アリス幻樂団/東方地霊殿体験版"
+TH11_INST_BAK="${WINEPREFIX}/drive_c/Program Files/忋奀傾儕僗尪炠抍/搶曽抧楈揳懱尡斉"
 
 TH11_FILE='th11tr002a_setup.exe'
 TH11_UPDATE_FILE='th11_002b_update.lzh'
@@ -24,17 +25,14 @@ th11_check() {
 }
 
 th11_run() {
-	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd "${TH11_DIR}"
-	LANG="ja_JP.UTF-8"
 
 	if [ -e "th11.exe" ]; then
-		wine th11.exe
+		LC_ALL="${TMP_LOCALE}" wine th11.exe
 	fi
 
-	LANG=${OLD_LANG}
 	cd ${OLD_PWD}
 }
 
@@ -53,7 +51,6 @@ th11_setup() {
 		curl -L ${link} --output ${TH11_DIR}/${TH11_UPDATE_FILE}
 	done
 
-	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd ${TH11_DIR}
@@ -61,20 +58,21 @@ th11_setup() {
 	if [ -e ${TH11_FILE} ] && [ -e ${TH11_UPDATE_FILE} ]; then
 		eval ${LZH_DEC} ${TH11_UPDATE_FILE}
 		
-		LANG='ja_JP.UTF-8'
+		LC_ALL="${TMP_LOCALE}" wine ${TH11_FILE}
 
-		wine ${TH11_FILE}
-
+		[ -d "${TH11_INST_BAK}" ] && [ ! -d "${TH11_INST}" ] && TH11_INST=${TH11_INST_BAK}
 		if [ -d "${TH11_INST}" ]; then
 			rm ${TH11_FILE}
 			rm ${TH11_UPDATE_FILE}
-			for f in "custom.exe" "th11tr.dat" "th11.exe" "thbgm_tr.dat" "マニュアル"; do
+			for f in "custom.exe" "th11tr.dat" "th11.exe" "thbgm_tr.dat"; do
 				ln -s "${TH11_INST}/${f}" "${TH11_DIR}/${f}"
 			done
+			[ -d "${TH11_INST}/儅僯儏傾儖" ] && ln -s "${TH11_INST}/儅僯儏傾儖" "${TH11_DIR}/マニュアル"
+			[ -d "${TH11_INST}/マニュアル" ] && ln -s "${TH11_INST}/マニュアル" "${TH11_DIR}/マニュアル"
 
 			zenity --info --title "Update" --text "此时应用 002b 更新程序。请在差分应用目录选框选入 C:\\Program Files\\上海アリス幻樂団\\東方地霊殿体験版"
 
-			wine th11_002b_update.exe
+			LC_ALL="${TMP_LOCALE}" wine th11_002b_update.exe
 			rm th11_002b_update.exe
 
 			echo "AwARAAAAAQACAAQA//////////8DAFgCWAIAAQEDAAJkUAACAAAAAAAAAAAHAAAAAAAAAAAAAAAA
@@ -85,7 +83,6 @@ AAAA" | base64 -d > th11.cfg
 	fi
 
 	cd ${OLD_PWD}
-	LANG=${OLD_LANG}
 }
 
 [ "$(th11_check)" = "0" ] && th11_setup

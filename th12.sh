@@ -2,6 +2,7 @@
 
 TH12_DIR="${WORK_DIR}/th12"
 TH12_INST="${WINEPREFIX}/drive_c/Program Files/上海アリス幻樂団/東方星蓮船体験版"
+TH12_INST_BAK="${WINEPREFIX}/drive_c/Program Files/忋奀傾儕僗尪炠抍/搶曽惎楡慏懱尡斉"
 
 TH12_FILE='th12tr002a_setup.exe'
 TH12_LINKS='"http://mirror.studio-ramble.com/upload/535/200907/th12tr002a_setup.exe"
@@ -19,17 +20,14 @@ th12_check() {
 }
 
 th12_run() {
-	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd "${TH12_DIR}"
-	LANG="ja_JP.UTF-8"
 
 	if [ -e "th12.exe" ]; then
-		wine th12.exe
+		LC_ALL="${TMP_LOCALE}" wine th12.exe
 	fi
 
-	LANG=${OLD_LANG}
 	cd ${OLD_PWD}
 }
 
@@ -41,21 +39,21 @@ th12_setup() {
 		curl -L ${link} --output ${TH12_DIR}/${TH12_FILE}
 	done
 
-	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd ${TH12_DIR}
 
 	if [ -e ${TH12_FILE} ]; then
-		LANG='ja_JP.UTF-8'
+		LC_ALL="${TMP_LOCALE}" wine ${TH12_FILE}
 
-		wine ${TH12_FILE}
-
+		[ -d "${TH12_INST_BAK}" ] && [ ! -d "${TH12_INST}" ] && TH12_INST=${TH12_INST_BAK}
 		if [ -d "${TH12_INST}" ]; then
 			rm ${TH12_FILE}
-			for f in "custom.exe" "th12tr.dat" "th12.exe" "thbgm_tr.dat" "マニュアル"; do
+			for f in "custom.exe" "th12tr.dat" "th12.exe" "thbgm_tr.dat"; do
 				ln -s "${TH12_INST}/${f}" "${TH12_DIR}/${f}"
 			done
+			[ -d "${TH12_INST}/儅僯儏傾儖" ] && ln -s "${TH12_INST}/儅僯儏傾儖" "${TH12_DIR}/マニュアル"
+			[ -d "${TH12_INST}/マニュアル" ] && ln -s "${TH12_INST}/マニュアル" "${TH12_DIR}/マニュアル"
 
 			echo "AQASAAAAAQACAAQA//////////8DAFgCWAIAAQEDAAJkUAACAAAAAAAAAAAHAAAAAAAAAAAAAAAA
 AAAA" | base64 -d > th12.cfg
@@ -65,7 +63,6 @@ AAAA" | base64 -d > th12.cfg
 	fi
 
 	cd ${OLD_PWD}
-	LANG=${OLD_LANG}
 }
 
 [ "$(th12_check)" = "0" ] && th12_setup

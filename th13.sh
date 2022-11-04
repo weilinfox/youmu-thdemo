@@ -2,7 +2,8 @@
 
 TH13_DIR="${WORK_DIR}/th13"
 TH13_INST="${WINEPREFIX}/drive_c/Program Files/上海アリス幻樂団/東方神霊廟体験版"
-TH13_DATA="${WINEPREFIX}/drive_c/users/${USER}/AppData/Roaming/ShanghaiAlice/th13tr"
+TH13_INST_BAK="${WINEPREFIX}/drive_c/Program Files/忋奀傾儕僗尪炠抍/搶曽恄楈昣懱尡斉"
+# TH13_DATA="${WINEPREFIX}/drive_c/users/${USER}/AppData/Roaming/ShanghaiAlice/th13tr"
 
 TH13_FILE='th13tr001a_setup.exe'
 TH13_LINKS='"http://mirror.studio-ramble.com/upload/535/201104/th13tr001a_setup.exe"
@@ -11,7 +12,7 @@ TH13_LINKS='"http://mirror.studio-ramble.com/upload/535/201104/th13tr001a_setup.
 TH13_MD5='5336b10545fd0b6cb0eb38c97199e9bc'
 
 [ -d ${TH13_DIR} ] || mkdir ${TH13_DIR}
-[ -d ${TH13_DATA} ] || mkdir ${TH13_DATA}
+# [ -d ${TH13_DATA} ] || mkdir -p ${TH13_DATA}
 
 th13_check() {
 	if [ -e "${TH13_DIR}/th13.exe" ]; then
@@ -22,17 +23,14 @@ th13_check() {
 }
 
 th13_run() {
-	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd "${TH13_DIR}"
-	LANG="ja_JP.UTF-8"
 
 	if [ -e "th13.exe" ]; then
-		wine th13.exe
+		LC_ALL="${TMP_LOCALE}" wine th13.exe
 	fi
 
-	LANG=${OLD_LANG}
 	cd ${OLD_PWD}
 }
 
@@ -44,32 +42,29 @@ th13_setup() {
 		curl -L ${link} --output ${TH13_DIR}/${TH13_FILE}
 	done
 
-	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd ${TH13_DIR}
 
 	if [ -e ${TH13_FILE} ]; then
-		LANG='ja_JP.UTF-8'
+		LC_ALL="${TMP_LOCALE}" wine ${TH13_FILE}
 
-		wine ${TH13_FILE}
-
+		[ -d "${TH13_INST_BAK}" ] && [ ! -d "${TH13_INST}" ] && TH13_INST=${TH13_INST_BAK}
 		if [ -d "${TH13_INST}" ]; then
 			rm ${TH13_FILE}
 			for f in "custom.exe" "th13tr.dat" "th13.exe" "thbgm_tr.dat"; do
 				ln -s "${TH13_INST}/${f}" "${TH13_DIR}/${f}"
 			done
 
-			ln -s "${TH13_DATA}" "${TH13_DIR}/th13tr_data"
-			echo "AQATAAAAAQACAAUA/////////////wMAWAJYAgABAQMAAmRQAAIAAAAAAAAHAAAAAAAAAAAAAAAA
-AAAA" | base64 -d > "${TH13_DIR}/th13tr_data/th13.cfg"
+#			ln -s "${TH13_DATA}" "${TH13_DIR}/th13tr_data"
+#			echo "AQATAAAAAQACAAUA/////////////wMAWAJYAgABAQMAAmRQAAIAAAAAAAAHAAAAAAAAAAAAAAAA
+#AAAA" | base64 -d > "${TH13_DIR}/th13tr_data/th13.cfg"
 
 			zenity --info --title "Success" --text "東方神霊廟 安装完成了捏"
 		fi
 	fi
 
 	cd ${OLD_PWD}
-	LANG=${OLD_LANG}
 }
 
 [ "$(th13_check)" = "0" ] && th13_setup

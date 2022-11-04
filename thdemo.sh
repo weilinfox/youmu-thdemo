@@ -45,6 +45,14 @@ if ! timidity >/dev/null; then
 	zenity --warning --title "No timidity" --text "紅魔郷 妖々夢 永夜抄 花映塚 体验版需要 timidity 播放背景音乐"
 fi
 
+if [ "$(locale -a | grep "ja_JP.utf8")" != "" ]; then
+	export TMP_LOCALE="ja_JP.UTF-8"
+elif [ "$(locale -a | grep "zh_CN.utf8")" != "" ]; then
+	export TMP_LOCALE="zh_CN.UTF-8"
+else
+	zenity --error --title "No locale support" --text "没有支持的 locale"
+	exit 1
+fi
 
 export WINEPREFIX="${WORK_DIR}/wine"
 export WINEDLLOVERRIDES='mscoree,mshtml='

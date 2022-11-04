@@ -18,7 +18,6 @@ th09_check() {
 }
 
 th09_run() {
-	OLD_LANG=${LANG}
 	OLD_PWD=$(pwd)
 
 	cd "${TH09_DIR}"
@@ -28,15 +27,12 @@ th09_run() {
 		midi="1"
 	fi
 
-	LANG="ja_JP.UTF-8"
-
-	wine th09tr.exe
+	LC_ALL="${TMP_LOCALE}" wine th09tr.exe
 
 	if [ "${midi}" = "1" ]; then
 		killall timidity
 	fi
 
-	LANG=${OLD_LANG}
 	cd ${OLD_PWD}
 }
 
