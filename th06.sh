@@ -36,6 +36,16 @@ th06_run() {
 	cd ${OLD_PWD}
 }
 
+th06_custom() {
+	OLD_PWD=$(pwd)
+
+	cd "${TH06_DIR}"
+
+	LC_ALL="${TMP_LOCALE}" wine custom.exe
+
+	cd ${OLD_PWD}
+}
+
 th06_setup() {
 	while [ "$(eval md5sum "${TH06_DIR}/${TH06_FILE}" | cut -d' ' -f1)" != "${TH06_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH06_LINKS})
@@ -67,8 +77,13 @@ th06_setup() {
 	cd ${OLD_PWD}
 }
 
-[ "$(th06_check)" = "0" ] && th06_setup
-[ "$(th06_check)" = "1" ] && th06_run
+if [ "$1" = "custom" ]; then
+	[ "$(th06_check)" = "0" ] && zenity --question --title "是否安装" --text "似乎没有安装诶，要先安装咩？" && th06_setup
+	[ "$(th06_check)" = "1" ] && th06_custom
+else
+	[ "$(th06_check)" = "0" ] && th06_setup
+	[ "$(th06_check)" = "1" ] && th06_run
+fi
 
 exit 0
 
