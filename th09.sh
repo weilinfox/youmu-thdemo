@@ -36,6 +36,16 @@ th09_run() {
 	cd ${OLD_PWD}
 }
 
+th09_custom() {
+	OLD_PWD=$(pwd)
+
+	cd "${TH09_DIR}"
+
+	LC_ALL="${TMP_LOCALE}" wine th09tr.exe
+
+	cd ${OLD_PWD}
+}
+
 th09_setup() {
 	while [ "$(eval md5sum "${TH09_DIR}/${TH09_FILE}" | cut -d' ' -f1)" != "${TH09_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH09_LINKS})
@@ -67,8 +77,13 @@ AgAAAgEBAQACAAAAAAECZFAAAAAAAAAAAAAAAAAAAAAA" | base64 -d > th09.cfg
 	cd ${OLD_PWD}
 }
 
-[ "$(th09_check)" = "0" ] && th09_setup
-[ "$(th09_check)" = "1" ] && th09_run
+if [ "$1" = "custom" ]; then
+	[ "$(th09_check)" = "0" ] && zenity --question --title "是否安装" --text "似乎没有安装诶，要先安装咩？" && th09_setup
+	[ "$(th09_check)" = "1" ] && th09_custom
+else
+	[ "$(th09_check)" = "0" ] && th09_setup
+	[ "$(th09_check)" = "1" ] && th09_run
+fi
 
 exit 0
 

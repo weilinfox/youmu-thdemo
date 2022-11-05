@@ -40,6 +40,16 @@ th10_run() {
 	cd ${OLD_PWD}
 }
 
+th10_custom() {
+	OLD_PWD=$(pwd)
+
+	cd "${TH10_DIR}"
+
+	LC_ALL="${TMP_LOCALE}" wine custom.exe
+
+	cd ${OLD_PWD}
+}
+
 th10_setup() {
 	while [ "$(eval md5sum "${TH10_DIR}/${TH10_FILE}" | cut -d' ' -f1)" != "${TH10_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH10_LINKS})
@@ -82,8 +92,13 @@ th10_setup() {
 	cd ${OLD_PWD}
 }
 
-[ "$(th10_check)" = "0" ] && th10_setup
-[ "$(th10_check)" = "1" ] && th10_run
+if [ "$1" = "custom" ]; then
+	[ "$(th10_check)" = "0" ] && zenity --question --title "是否安装" --text "似乎没有安装诶，要先安装咩？" && th10_setup
+	[ "$(th10_check)" = "1" ] && th10_custom
+else
+	[ "$(th10_check)" = "0" ] && th10_setup
+	[ "$(th10_check)" = "1" ] && th10_run
+fi
 
 exit 0
 

@@ -31,6 +31,16 @@ th12_run() {
 	cd ${OLD_PWD}
 }
 
+th12_custom() {
+	OLD_PWD=$(pwd)
+
+	cd "${TH12_DIR}"
+
+	LC_ALL="${TMP_LOCALE}" wine custom.exe
+
+	cd ${OLD_PWD}
+}
+
 th12_setup() {
 	while [ "$(eval md5sum "${TH12_DIR}/${TH12_FILE}" | cut -d' ' -f1)" != "${TH12_MD5}" ]; do
 		link=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --column download ${TH12_LINKS})
@@ -65,8 +75,13 @@ AAAA" | base64 -d > th12.cfg
 	cd ${OLD_PWD}
 }
 
-[ "$(th12_check)" = "0" ] && th12_setup
-[ "$(th12_check)" = "1" ] && th12_run
+if [ "$1" = "custom" ]; then
+	[ "$(th12_check)" = "0" ] && zenity --question --title "是否安装" --text "似乎没有安装诶，要先安装咩？" && th12_setup
+	[ "$(th12_check)" = "1" ] && th12_custom
+else
+	[ "$(th12_check)" = "0" ] && th12_setup
+	[ "$(th12_check)" = "1" ] && th12_run
+fi
 
 exit 0
 
