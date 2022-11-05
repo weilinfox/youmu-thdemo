@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# 白玉楼製作所
+
 # https://www16.big.or.jp/~zun/
 # http://s1.gptwm.com/s_alice/index.html
 
@@ -72,12 +74,14 @@ TH_NAMES='th06 "東方紅魔郷　～ the Embodiment of Scarlet Devil."
 	th15 "東方紺珠伝　～ Legacy of Lunatic Kingdom."'
 
 while true; do
-	func=$(zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --print-column=1 --hide-column=1 --column Print --column Menu "game" "启动游戏" "custom" "启动 custom.exe" "wine" "显示 Wine 配置")
+	func=$(zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --print-column=1 --hide-column=1 --column Print --column Menu "game" "启动游戏" "custom" "启动 custom.exe" "wine" "显示 Wine 配置" "about" "关于")
 	[ "$func" = "" ] && break
 
 	param=
 	if [ "$func" = "wine" ]; then
 		winecfg
+	elif [ "$func" = "about" ]; then
+		zenity --info --title "白玉楼製作所" --text "白玉楼製作所 thdemo\nyoumu c 2022"
 	else
 		[ "$func" = "custom" ] && param="custom"
 		game=$(eval zenity --list --hide-header --window-icon $SCRIPT_DIR/thdemo.xpm --print-column=1 --column com --column name $TH_NAMES)
