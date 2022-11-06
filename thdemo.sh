@@ -5,7 +5,7 @@
 # https://www16.big.or.jp/~zun/
 # http://s1.gptwm.com/s_alice/index.html
 
-SCRIPT_DIR=$(cd $(dirname "$0"); pwd)
+SCRIPT_DIR=$(cd $(dirname $(readlink "$0")); pwd)
 APP_NAME="th-demo"
 
 export WORK_DIR="${HOME}/.${APP_NAME}"
