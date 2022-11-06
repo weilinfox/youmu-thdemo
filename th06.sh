@@ -77,7 +77,9 @@ th06_setup() {
 	cd ${OLD_PWD}
 }
 
-if [ "$1" = "custom" ]; then
+if [ "$1" = "directory" ]; then
+	xdg-open ${TH06_DIR}
+elif [ "$1" = "custom" ]; then
 	[ "$(th06_check)" = "0" ] && zenity --question --title "是否安装" --text "似乎没有安装诶，要先安装咩？" && th06_setup
 	[ "$(th06_check)" = "1" ] && th06_custom
 else

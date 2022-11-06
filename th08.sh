@@ -91,7 +91,9 @@ AAAA" | base64 -d > th08.cfg
 	cd ${OLD_PWD}
 }
 
-if [ "$1" = "custom" ]; then
+if [ "$1" = "directory" ]; then
+	xdg-open ${TH08_DIR}
+elif [ "$1" = "custom" ]; then
 	[ "$(th08_check)" = "0" ] && zenity --question --title "是否安装" --text "似乎没有安装诶，要先安装咩？" && th08_setup
 	[ "$(th08_check)" = "1" ] && th08_custom
 else

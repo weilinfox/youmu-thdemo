@@ -75,7 +75,9 @@ AAAA" | base64 -d > th12.cfg
 	cd ${OLD_PWD}
 }
 
-if [ "$1" = "custom" ]; then
+if [ "$1" = "directory" ]; then
+	xdg-open ${TH12_DIR}
+elif [ "$1" = "custom" ]; then
 	[ "$(th12_check)" = "0" ] && zenity --question --title "是否安装" --text "似乎没有安装诶，要先安装咩？" && th12_setup
 	[ "$(th12_check)" = "1" ] && th12_custom
 else

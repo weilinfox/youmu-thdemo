@@ -95,7 +95,9 @@ AAAA" | base64 -d > th11.cfg
 	cd ${OLD_PWD}
 }
 
-if [ "$1" = "custom" ]; then
+if [ "$1" = "directory" ]; then
+	xdg-open ${TH11_DIR}
+elif [ "$1" = "custom" ]; then
 	[ "$(th11_check)" = "0" ] && zenity --question --title "是否安装" --text "似乎没有安装诶，要先安装咩？" && th11_setup
 	[ "$(th11_check)" = "1" ] && th11_custom
 else

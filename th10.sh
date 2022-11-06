@@ -92,7 +92,9 @@ th10_setup() {
 	cd ${OLD_PWD}
 }
 
-if [ "$1" = "custom" ]; then
+if [ "$1" = "directory" ]; then
+	xdg-open ${TH10_DIR}
+elif [ "$1" = "custom" ]; then
 	[ "$(th10_check)" = "0" ] && zenity --question --title "是否安装" --text "似乎没有安装诶，要先安装咩？" && th10_setup
 	[ "$(th10_check)" = "1" ] && th10_custom
 else

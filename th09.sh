@@ -77,7 +77,9 @@ AgAAAgEBAQACAAAAAAECZFAAAAAAAAAAAAAAAAAAAAAA" | base64 -d > th09.cfg
 	cd ${OLD_PWD}
 }
 
-if [ "$1" = "custom" ]; then
+if [ "$1" = "directory" ]; then
+	xdg-open ${TH09_DIR}
+elif [ "$1" = "custom" ]; then
 	[ "$(th09_check)" = "0" ] && zenity --question --title "是否安装" --text "似乎没有安装诶，要先安装咩？" && th09_setup
 	[ "$(th09_check)" = "1" ] && th09_custom
 else

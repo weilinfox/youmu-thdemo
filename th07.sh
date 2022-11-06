@@ -74,7 +74,9 @@ th07_setup() {
 	cd ${OLD_PWD}
 }
 
-if [ "$1" = "custom" ]; then
+if [ "$1" = "directory" ]; then
+	xdg-open ${TH07_DIR}
+elif [ "$1" = "custom" ]; then
 	[ "$(th07_check)" = "0" ] && zenity --question --title "是否安装" --text "似乎没有安装诶，要先安装咩？" && th07_setup
 	[ "$(th07_check)" = "1" ] && th07_custom
 else

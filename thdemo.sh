@@ -5,7 +5,8 @@
 # https://www16.big.or.jp/~zun/
 # http://s1.gptwm.com/s_alice/index.html
 
-SCRIPT_DIR=$(cd $(dirname $(readlink "$0")); pwd)
+[ -f "$0" ] && SCRIPT_DIR=$(cd $(dirname "$0"); pwd)
+[ -h "$0" ] && SCRIPT_DIR=$(cd $(dirname $(readlink "$0")); pwd)
 APP_NAME="th-demo"
 
 export WORK_DIR="${HOME}/.${APP_NAME}"
@@ -47,6 +48,10 @@ if ! timidity >/dev/null; then
 	zenity --warning --title "No timidity" --text "紅魔郷 妖々夢 永夜抄 花映塚 体验版需要 timidity 播放背景音乐"
 fi
 
+if ! xdg-open --help >/dev/null; then
+	zenity --warning --title "No xdg-open" --text "没有找到 xdg-open 诶"
+fi
+
 if [ "$(locale -a | grep "ja_JP.utf8")" != "" ]; then
 	export TMP_LOCALE="ja_JP.UTF-8"
 elif [ "$(locale -a | grep "zh_CN.utf8")" != "" ]; then
@@ -62,6 +67,13 @@ export WINEARCH='win32'
 
 [ -d "$WORK_DIR" ] || mkdir -p "$WORK_DIR"
 
+MENU='"game" "启动游戏"
+	"custom" "启动 custom.exe"
+	"game-dir" "打开游戏目录"
+	"wine" "显示 Wine 配置"
+	"wine-dir" "打开 Wine 目录"
+	"about" "关于"'
+
 TH_NAMES='th06 "東方紅魔郷　～ the Embodiment of Scarlet Devil."
 	th07 "東方妖々夢　～ Perfect Cherry Blossom."
 	th08 "東方永夜抄　～ Imperishable Night."
@@ -74,16 +86,20 @@ TH_NAMES='th06 "東方紅魔郷　～ the Embodiment of Scarlet Devil."
 	th15 "東方紺珠伝　～ Legacy of Lunatic Kingdom."'
 
 while true; do
-	func=$(zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --print-column=1 --hide-column=1 --column Print --column Menu "game" "启动游戏" "custom" "启动 custom.exe" "wine" "显示 Wine 配置" "about" "关于")
+	func=$(eval zenity --list --window-icon ${SCRIPT_DIR}/thdemo.xpm --print-column=1 --hide-column=1 --column Print --column Menu $MENU)
 	[ "$func" = "" ] && break
 
 	param=
+	game=
 	if [ "$func" = "wine" ]; then
 		winecfg
+	elif [ "$func" = "wine-dir" ]; then
+		xdg-open $WINEPREFIX
 	elif [ "$func" = "about" ]; then
 		zenity --info --title "白玉楼製作所" --text "白玉楼製作所 thdemo\nyoumu c 2022"
 	else
 		[ "$func" = "custom" ] && param="custom"
+		[ "$func" = "game-dir" ] && param="directory"
 		game=$(eval zenity --list --hide-header --window-icon $SCRIPT_DIR/thdemo.xpm --print-column=1 --column com --column name $TH_NAMES)
 	fi
 	[ "$game" = "" ] && continue

@@ -79,7 +79,9 @@ th15_setup() {
 	cd ${OLD_PWD}
 }
 
-if [ "$1" = "custom" ]; then
+if [ "$1" = "directory" ]; then
+	xdg-open ${TH15_DIR}
+elif [ "$1" = "custom" ]; then
 	[ "$(th15_check)" = "0" ] && zenity --question --title "是否安装" --text "似乎没有安装诶，要先安装咩？" && th15_setup
 	[ "$(th15_check)" = "1" ] && th15_custom
 else
