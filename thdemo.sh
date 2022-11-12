@@ -43,6 +43,10 @@ if ! convmv --list >/dev/null; then
 	zenity --error --title "No convmv" --text "没找到 convmv 诶"
 	exit 1
 fi
+if ! iconv --help >/dev/null; then
+	zenity --error --title "No iconv" --text "没找到 iconv 诶"
+	exit 1
+fi
 
 if ! timidity >/dev/null; then
 	zenity --warning --title "No timidity" --text "紅魔郷 妖々夢 永夜抄 花映塚 体验版需要 timidity 播放背景音乐"
@@ -64,8 +68,31 @@ fi
 export WINEPREFIX="${WORK_DIR}/wine"
 export WINEDLLOVERRIDES='mscoree,mshtml='
 export WINEARCH='win32'
+# export WINEDEBUG=+font
 
-[ -d "$WORK_DIR" ] || mkdir -p "$WORK_DIR"
+# Setup wine environment
+if [ ! -d "${WINEPREFIX}" ]; then
+	mkdir -p "${WINEPREFIX}"
+
+	# 1. Font
+	#   th06 use PMingLiU
+	#   th07+ use ＭＳ ゴシック
+	# 2. Grab cursor when full screen
+	font=$(fc-match ':lang=ja' -f '%{family[0]}')
+	regc="REGEDIT4
+
+[HKEY_CURRENT_USER\\Software\\Wine\\Fonts\\Replacements]
+\"PMingLiU\"=\"${font}\"
+\"ＭＳ ゴシック\"=\"${font}\"
+
+[HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver]
+\"GrabFullscreen\"=\"Y\""
+
+	echo -e -n "\xff\xfe" > "${WINEPREFIX}/thcfg.reg"
+	iconv --from-code UTF-8 --to-code UTF-16LE <(echo "$regc") >> "${WINEPREFIX}/thcfg.reg"
+
+	wine regedit "${WINEPREFIX}/thcfg.reg"
+fi
 
 MENU='"game" "启动游戏"
 	"custom" "启动 custom.exe"
