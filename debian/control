@@ -1,0 +1,14 @@
+Source: thdemo
+Section: games
+Priority: optional
+Maintainer: weilinfox
+Build-Depends: debhelper
+Standards-Version: 4.1.4
+Homepage: https://github.com/weilinfox/youmu-thdemo
+
+Package: thdemo
+Architecture: any
+Multi-Arch: foreign
+Depends: convmv, curl, fontconfig, libarchive-tools, libc-bin, lhasa, timidity, wine, xdg-utils, zenity
+Description: Scripts to download, install and run Touhou Project series game trial versions. Easy upgrade to full version.
+
