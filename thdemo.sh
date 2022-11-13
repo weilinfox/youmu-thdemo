@@ -5,8 +5,16 @@
 # https://www16.big.or.jp/~zun/
 # http://s1.gptwm.com/s_alice/index.html
 
-[ -f "$0" ] && SCRIPT_DIR=$(cd $(dirname "$0"); pwd)
-[ -h "$0" ] && SCRIPT_DIR=$(cd $(dirname $(readlink "$0")); pwd)
+[ -f "$0" ] && SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd)"
+if [ -h "$0" ]; then
+	rpath="$(dirname $(readlink "$0"))"
+	if [ "${rpath##/*}" != "" ]; then
+		SCRIPT_DIR="$(cd "$(dirname "$0")/${rpath}"; pwd)"
+	else
+		SCRIPT_DIR="$(cd "${rpath}"; pwd)"
+	fi
+fi
+
 APP_NAME="th-demo"
 
 export WORK_DIR="${HOME}/.${APP_NAME}"
@@ -67,7 +75,7 @@ fi
 
 export WINEPREFIX="${WORK_DIR}/wine"
 export WINEDLLOVERRIDES='mscoree,mshtml='
-export WINEARCH='win32'
+# export WINEARCH='win32'
 # export WINEDEBUG=+font
 
 # Setup wine environment
@@ -79,17 +87,21 @@ if [ ! -d "${WINEPREFIX}" ]; then
 	#   th07+ use ＭＳ ゴシック
 	# 2. Grab cursor when full screen
 	font=$(fc-match ':lang=ja' -f '%{family[0]}')
-	regc="REGEDIT4
+	cat >"${WINEPREFIX}/thcfg_utf-8.reg"<<EOF
+REGEDIT4
 
 [HKEY_CURRENT_USER\\Software\\Wine\\Fonts\\Replacements]
-\"PMingLiU\"=\"${font}\"
-\"ＭＳ ゴシック\"=\"${font}\"
+"PMingLiU"="${font}"
+"ＭＳ ゴシック"="${font}"
 
 [HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver]
-\"GrabFullscreen\"=\"Y\""
-
-	echo -e -n "\xff\xfe" > "${WINEPREFIX}/thcfg.reg"
-	iconv --from-code UTF-8 --to-code UTF-16LE <(echo "$regc") >> "${WINEPREFIX}/thcfg.reg"
+"GrabFullscreen"="Y"
+EOF
+	echoe=
+	[ "$(echo -n -e)" != "-e" ] && echoe="-e"
+	echo -n ${echoe} "\0777\0776" > "${WINEPREFIX}/thcfg.reg"
+	iconv --from-code UTF-8 --to-code UTF-16LE "${WINEPREFIX}/thcfg_utf-8.reg" >> "${WINEPREFIX}/thcfg.reg"
+	rm "${WINEPREFIX}/thcfg_utf-8.reg"
 
 	wine regedit "${WINEPREFIX}/thcfg.reg"
 fi
