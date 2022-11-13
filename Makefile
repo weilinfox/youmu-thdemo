@@ -8,7 +8,7 @@ install:
 	@mkdir -p "${DESTDIR}${PREFIX}/lib/${NAME}"
 	@mkdir -p "${DESTDIR}${PREFIX}/bin/"
 	@cp *.sh "${DESTDIR}${PREFIX}/lib/${NAME}/"
-	@ln -s "${DESTDIR}${PREFIX}/lib/${NAME}/thdemo.sh" "${DESTDIR}${PREFIX}/bin/thdemo"
+	@ln -s "${PREFIX}/lib/${NAME}/thdemo.sh" "${DESTDIR}${PREFIX}/bin/thdemo"
 	@find "${DESTDIR}${PREFIX}/lib/" -name "*.sh" | xargs chmod 755
 
 uninstall:
