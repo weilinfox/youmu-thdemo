@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=ThDemo
+Name[zh_CN]=东方弹幕合集
+Comment=Run Touhou Project series games via wine
+Comment[zh_CN]=基于 Wine 的东方弹幕游戏加载器
+Exec=/usr/bin/thdemo
+Icon=/usr/lib/thdemo/thdemo.xpm
+Terminal=true
+Type=Application
+Categories=Game;
+Actions=nodebug
+
+[Desktop Action nodebug]
+Name=ThDemo (no console)
+Name[zh_CN]=东方弹幕合集（隐藏终端）
+Exec=/usr/bin/thdemo
+Terminal=false
+

@@ -10,5 +10,5 @@ Package: thdemo
 Architecture: all
 Multi-Arch: foreign
 Depends: convmv, curl, fontconfig, libarchive-tools, libc-bin, lhasa, timidity, wine, xdg-utils, zenity
-Description: Scripts to download, install and run Touhou Project series game trial versions. Easy upgrade to full version.
+Description: Scripts to download, install and run Touhou Project series game trial versions via wine. Easy upgrade to full version.
 
